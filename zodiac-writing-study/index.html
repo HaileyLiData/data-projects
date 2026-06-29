@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太阳星座与写作风格关联性研究报告</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .header .meta span {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+
+        .nav ul {
+            display: flex;
+            list-style: none;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Section */
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h3 {
+            color: var(--text);
+            font-size: 1.3rem;
+            margin: 30px 0 15px;
+        }
+
+        .section h4 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            margin: 20px 0 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #bae6fd;
+        }
+
+        .stat-card.highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #fbbf24;
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border-color: #86efac;
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-color: #fca5a5;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card.highlight .number {
+            color: #d97706;
+        }
+
+        .stat-card.success .number {
+            color: #16a34a;
+        }
+
+        .stat-card.danger .number {
+            color: #dc2626;
+        }
+
+        .stat-card .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .timeline-item.completed::before {
+            background: var(--success);
+            box-shadow: 0 0 0 2px var(--success);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            background: var(--bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+
+        /* Code */
+        code {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .comparison-card.before {
+            border-color: #fca5a5;
+            background: #fef2f2;
+        }
+
+        .comparison-card.after {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Flow Chart */
+        .flow-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+            font-weight: 500;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feature-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Conclusion Box */
+        .conclusion-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .conclusion-box h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .conclusion-box p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Discussion Cards */
+        .discussion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .discussion-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .discussion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .discussion-card h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Print */
+        @media print {
+            .nav {
+                display: none;
+            }
+            .section {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>太阳星座与写作风格关联性研究</h1>
+        <p class="subtitle">Can Sun Signs Influence Writing Style? A Large-Scale Computational Analysis</p>
+        <div class="meta">
+            <span>样本量: 17,872 位作者</span>
+            <span>特征维度: 231 (Empath 194 + Style 37)</span>
+            <span>更新日期: 2026-06-28</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="nav">
+            <ul>
+                <li><a href="#summary">研究摘要</a></li>
+                <li><a href="#data">数据来源</a></li>
+                <li><a href="#evolution">实验演进</a></li>
+                <li><a href="#methods">分析方法</a></li>
+                <li><a href="#results">核心结果</a></li>
+                <li><a href="#elements">四元素分析</a></li>
+                <li><a href="#discussion">方法论讨论</a></li>
+                <li><a href="#conclusion">最终结论</a></li>
+                <li><a href="#future">后续方向</a></li>
+            </ul>
+        </nav>
+
+        <!-- Section 1: Summary -->
+        <section id="summary" class="section">
+            <h2>📋 研究摘要</h2>
+
+            <div class="alert alert-info">
+                <span class="alert-icon">🎯</span>
+                <div>
+                    <strong>核心研究问题</strong><br>
+                    太阳星座是否会影响人的语言表达风格？具体而言，不同星座的作家在"写什么"（语义主题）和"怎么写"（写作风格）上是否存在系统性差异？
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">17,872</div>
+                    <div class="label">作者样本量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">231</div>
+                    <div class="label">分析特征数</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="number">0</div>
+                    <div class="label">Bonferroni显著特征</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="number">0.09%</div>
+                    <div class="label">最大解释方差</div>
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h3>核心结论</h3>
+                <p>在17,872位作者的大规模分析中，无论是语义内容(Empath 194维)还是写作风格(Style 37维)，经过Bonferroni多重比较校正后，<strong>没有任何特征显示星座间存在统计学显著差异</strong>。太阳星座与语言表达风格之间不存在可检测的关联。</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Data Sources -->
+        <section id="data" class="section">
+            <h2>📊 数据来源</h2>
+
+            <h3>数据源概览</h3>
+            <table>
+                <tr>
+                    <th>数据类型</th>
+                    <th>来源</th>
+                    <th>数量</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>作家出生日期</td>
+                    <td>Wikidata SPARQL</td>
+                    <td>218,684人</td>
+                    <td>精确到月日，排除day=1的默认值</td>
+                </tr>
+                <tr>
+                    <td>作品文本</td>
+                    <td>Project Gutenberg</td>
+                    <td>26,714位作者</td>
+                    <td>公共领域文学作品</td>
+                </tr>
+                <tr>
+                    <td>匹配成功</td>
+                    <td>Wikidata + Gutenberg</td>
+                    <td>19,770人</td>
+                    <td>有精确生日 + 有作品文本</td>
+                </tr>
+                <tr>
+                    <td>最终分析</td>
+                    <td>成功下载文本</td>
+                    <td><strong>17,872人</strong></td>
+                    <td>91.1%覆盖率</td>
+                </tr>
+            </table>
+
+            <h3>数据匹配方法</h3>
+            <div class="flow-chart">
+                <div class="flow-step">Gutenberg作者<br>26,714人</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">有出生年<br>20,462人</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">Wikidata匹配<br>19,770人</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">成功下载<br>17,872人</div>
+            </div>
+
+            <h4>两种匹配策略</h4>
+            <div class="comparison">
+                <div class="comparison-card">
+                    <h4>方法1: 模糊匹配</h4>
+                    <p><strong>结果:</strong> 5,435人</p>
+                    <p>三层策略：精确姓氏+出生年 → 年份±1偏移 → 全局模糊匹配</p>
+                </div>
+                <div class="comparison-card">
+                    <h4>方法2: Wikidata直接查询</h4>
+                    <p><strong>结果:</strong> 14,357人</p>
+                    <p>Wikidata中标注Gutenberg ID (P1938)的作家，精确匹配</p>
+                </div>
+            </div>
+
+            <h3>星座分布 (17,872人)</h3>
+            <table>
+                <tr>
+                    <th>星座</th>
+                    <th>人数</th>
+                    <th>占比</th>
+                    <th>偏差</th>
+                </tr>
+                <tr><td>Aries 白羊</td><td>1,483</td><td>8.3%</td><td>-</td></tr>
+                <tr><td>Taurus 金牛</td><td>1,453</td><td>8.1%</td><td>-</td></tr>
+                <tr><td>Gemini 双子</td><td>1,372</td><td>7.7%</td><td>-</td></tr>
+                <tr><td>Cancer 巨蟹</td><td>1,491</td><td>8.3%</td><td>-</td></tr>
+                <tr><td>Leo 狮子</td><td>1,481</td><td>8.3%</td><td>-</td></tr>
+                <tr><td>Virgo 处女</td><td>1,440</td><td>8.1%</td><td>-</td></tr>
+                <tr><td>Libra 天秤</td><td>1,467</td><td>8.2%</td><td>-</td></tr>
+                <tr><td>Scorpio 天蝎</td><td>1,486</td><td>8.3%</td><td>-</td></tr>
+                <tr><td>Sagittarius 射手</td><td>1,542</td><td>8.6%</td><td>-</td></tr>
+                <tr style="background:#fef3c7"><td>Capricorn 摩羯</td><td>2,034</td><td>11.4%</td><td><span class="badge badge-warning">偏高</span></td></tr>
+                <tr style="background:#fee2e2"><td>Aquarius 水瓶</td><td>996</td><td>5.6%</td><td><span class="badge badge-danger">偏低</span></td></tr>
+                <tr><td>Pisces 双鱼</td><td>1,627</td><td>9.1%</td><td>-</td></tr>
+            </table>
+        </section>
+
+        <!-- Section 3: Evolution -->
+        <section id="evolution" class="section">
+            <h2>📈 实验演进</h2>
+
+            <h3>样本量扩展历程</h3>
+            <div class="comparison">
+                <div class="comparison-card before">
+                    <h4>🔴 初始阶段</h4>
+                    <ul>
+                        <li>experiment_500: 500人</li>
+                        <li>experiment_4336: 4,331人</li>
+                        <li>匹配率: 21%</li>
+                    </ul>
+                </div>
+                <div class="comparison-card after">
+                    <h4>🟢 优化后</h4>
+                    <ul>
+                        <li>experiment_19770: 17,872人</li>
+                        <li>匹配率: 91%</li>
+                        <li>提升: <strong>+312%</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>实验对比</h3>
+            <table>
+                <tr>
+                    <th>实验</th>
+                    <th>样本量</th>
+                    <th>p&lt;0.05显著</th>
+                    <th>Bonferroni显著</th>
+                    <th>最大效应量</th>
+                    <th>结论</th>
+                </tr>
+                <tr>
+                    <td>experiment_500</td>
+                    <td>500</td>
+                    <td>3</td>
+                    <td>-</td>
+                    <td>~0.02</td>
+                    <td><span class="badge badge-warning">小样本偏差</span></td>
+                </tr>
+                <tr>
+                    <td>experiment_4336</td>
+                    <td>4,331</td>
+                    <td>12</td>
+                    <td>0</td>
+                    <td>~0.006</td>
+                    <td><span class="badge badge-danger">无显著关联</span></td>
+                </tr>
+                <tr style="background:#f0fdf4">
+                    <td><strong>experiment_19770</strong></td>
+                    <td><strong>17,872</strong></td>
+                    <td>13 (Empath) + 3 (Style)</td>
+                    <td><strong>0</strong></td>
+                    <td><strong>0.0009</strong></td>
+                    <td><span class="badge badge-danger">无显著关联</span></td>
+                </tr>
+            </table>
+
+            <div class="alert alert-warning">
+                <span class="alert-icon">⚠️</span>
+                <div>
+                    <strong>关键发现</strong><br>
+                    500人实验中发现的"显著"结果（巨蟹座负面情绪高、金牛座科学主题高）在4,331人和17,872人实验中<strong>全部无法复现</strong>，证明是小样本偏差。
+                </div>
+            </div>
+
+            <h3>时间线</h3>
+            <div class="timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-21</div>
+                    <div class="timeline-content">
+                        <strong>Phase 1 完成</strong>：作家群体星座分布分析，发现双子座更容易成为作家(+11.6%)
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-21</div>
+                    <div class="timeline-content">
+                        <strong>500人预实验</strong>：发现negative_emotion、death、science等维度"显著"
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-27</div>
+                    <div class="timeline-content">
+                        <strong>4,331人实验</strong>：500人结果全部无法复现，确认为小样本偏差
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-27</div>
+                    <div class="timeline-content">
+                        <strong>数据扩展</strong>：优化匹配算法，从4,336人扩展到19,770人 (+356%)
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-28</div>
+                    <div class="timeline-content">
+                        <strong>17,872人分析完成</strong>：Empath 194维，0个Bonferroni显著
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-28</div>
+                    <div class="timeline-content">
+                        <strong>Style特征分析</strong>：新增37个风格特征，0个Bonferroni显著
+                    </div>
+                </div>
+                <div class="timeline-item completed">
+                    <div class="timeline-date">2026-06-28</div>
+                    <div class="timeline-content">
+                        <strong>四元素分析</strong>：火土风水分组，依然无显著关联
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Methods -->
+        <section id="methods" class="section">
+            <h2>🔬 分析方法</h2>
+
+            <h3>分析框架</h3>
+            <div class="flow-chart">
+                <div class="flow-step">文本采集<br>50,000字符/人</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">特征提取<br>Empath + Style</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">统计检验<br>Kruskal-Wallis</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">多重校正<br>Bonferroni</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">聚类分析<br>K-means</div>
+            </div>
+
+            <h3>特征体系 (231个)</h3>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Empath语义特征 (194维)</h4>
+                    <p>分析"<strong>写什么</strong>"</p>
+                    <ul>
+                        <li>情感类：positive_emotion, negative_emotion, anger, fear...</li>
+                        <li>主题类：death, science, family, business...</li>
+                        <li>社会类：communication, friends, children...</li>
+                    </ul>
+                    <p><code>工具: Empath库 (与LIWC相关r=0.906)</code></p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>Style风格特征 (37维)</h4>
+                    <p>分析"<strong>怎么写</strong>"</p>
+                    <ul>
+                        <li>句子长度 (5): mean, std, median, short_ratio, long_ratio</li>
+                        <li>词汇长度 (4): mean, std, short_ratio, long_ratio</li>
+                        <li>词汇丰富度 (2): TTR, hapax_ratio</li>
+                        <li>功能词频率 (21): the, a, and, of, to, in...</li>
+                        <li>标点符号 (5): comma, semicolon, question, exclamation, dash</li>
+                    </ul>
+                    <p><code>工具: NLTK + 自定义</code></p>
+                </div>
+            </div>
+
+            <h3>统计方法</h3>
+            <table>
+                <tr>
+                    <th>方法</th>
+                    <th>用途</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>Kruskal-Wallis检验</td>
+                    <td>组间差异</td>
+                    <td>非参数方法，比较12个星座组</td>
+                </tr>
+                <tr>
+                    <td>Bonferroni校正</td>
+                    <td>多重比较</td>
+                    <td>α = 0.05/n_tests，控制假阳性</td>
+                </tr>
+                <tr>
+                    <td>效应量 (η²)</td>
+                    <td>实际差异</td>
+                    <td>衡量解释方差比例</td>
+                </tr>
+                <tr>
+                    <td>K-means聚类</td>
+                    <td>风格分类</td>
+                    <td>K=4 (肘部法则确定)</td>
+                </tr>
+                <tr>
+                    <td>卡方检验</td>
+                    <td>关联分析</td>
+                    <td>检验聚类与星座的关联</td>
+                </tr>
+            </table>
+
+            <h3>多重比较校正阈值</h3>
+            <table>
+                <tr>
+                    <th>特征集</th>
+                    <th>特征数</th>
+                    <th>原始阈值</th>
+                    <th>Bonferroni阈值</th>
+                </tr>
+                <tr>
+                    <td>Empath</td>
+                    <td>194</td>
+                    <td>0.05</td>
+                    <td><strong>0.000258</strong></td>
+                </tr>
+                <tr>
+                    <td>Style</td>
+                    <td>37</td>
+                    <td>0.05</td>
+                    <td><strong>0.00135</strong></td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Section 5: Results -->
+        <section id="results" class="section">
+            <h2>📊 核心结果</h2>
+
+            <h3>Empath分析结果 (194维)</h3>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">194</div>
+                    <div class="label">检验维度</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">13</div>
+                    <div class="label">p&lt;0.05 显著</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="number">0</div>
+                    <div class="label">Bonferroni显著</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">0.0009</div>
+                    <div class="label">最大效应量</div>
+                </div>
+            </div>
+
+            <h4>p&lt;0.05显著维度 (均未通过Bonferroni)</h4>
+            <div class="table-responsive">
+            <table>
+                <tr>
+                    <th>维度</th>
+                    <th>p值</th>
+                    <th>效应量 η²</th>
+                    <th>最高星座</th>
+                    <th>最低星座</th>
+                </tr>
+                <tr><td>disappointment</td><td>0.0046</td><td>0.0009</td><td>Scorpio</td><td>Aquarius</td></tr>
+                <tr><td>home</td><td>0.0104</td><td>0.0008</td><td>Gemini</td><td>Aquarius</td></tr>
+                <tr><td>traveling</td><td>0.0115</td><td>0.0007</td><td>Gemini</td><td>Aquarius</td></tr>
+                <tr><td>blue_collar_job</td><td>0.0123</td><td>0.0007</td><td>Gemini</td><td>Aquarius</td></tr>
+                <tr><td>confusion</td><td>0.0125</td><td>0.0007</td><td>Virgo</td><td>Aquarius</td></tr>
+                <tr><td>furniture</td><td>0.0152</td><td>0.0007</td><td>Gemini</td><td>Aquarius</td></tr>
+                <tr><td>exasperation</td><td>0.0274</td><td>0.0006</td><td>Libra</td><td>Leo</td></tr>
+                <tr><td>farming</td><td>0.0291</td><td>0.0006</td><td>Taurus</td><td>Leo</td></tr>
+                <tr><td>sympathy</td><td>0.0299</td><td>0.0006</td><td>Libra</td><td>Leo</td></tr>
+                <tr><td>disgust</td><td>0.0302</td><td>0.0006</td><td>Scorpio</td><td>Aquarius</td></tr>
+                <tr><td>computer</td><td>0.0324</td><td>0.0006</td><td>Sagittarius</td><td>Libra</td></tr>
+                <tr><td>pet</td><td>0.0362</td><td>0.0005</td><td>Aquarius</td><td>Scorpio</td></tr>
+                <tr><td>shape_and_size</td><td>0.0373</td><td>0.0005</td><td>Pisces</td><td>Aquarius</td></tr>
+            </table>
+            </div>
+
+            <h3>Style分析结果 (37维)</h3>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">37</div>
+                    <div class="label">检验维度</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">3</div>
+                    <div class="label">p&lt;0.05 显著</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="number">0</div>
+                    <div class="label">Bonferroni显著</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">0.0008</div>
+                    <div class="label">最大效应量</div>
+                </div>
+            </div>
+
+            <h4>显著Style特征</h4>
+            <table>
+                <tr>
+                    <th>特征</th>
+                    <th>p值</th>
+                    <th>效应量 η²</th>
+                    <th>最高星座</th>
+                    <th>最低星座</th>
+                </tr>
+                <tr><td>question_ratio (问号使用)</td><td>0.0071</td><td>0.0008</td><td>Capricorn</td><td>Cancer</td></tr>
+                <tr><td>fw_on (介词on)</td><td>0.0116</td><td>0.0007</td><td>Virgo</td><td>Aquarius</td></tr>
+                <tr><td>fw_at (介词at)</td><td>0.0497</td><td>0.0005</td><td>Pisces</td><td>Aquarius</td></tr>
+            </table>
+
+            <h3>聚类分析结果</h3>
+
+            <div class="comparison">
+                <div class="comparison-card">
+                    <h4>Empath聚类</h4>
+                    <table>
+                        <tr><th>指标</th><th>数值</th></tr>
+                        <tr><td>聚类数</td><td>4</td></tr>
+                        <tr><td>Chi²</td><td>30.21</td></tr>
+                        <tr><td>p值</td><td>0.6067</td></tr>
+                        <tr><td>结论</td><td><span class="badge badge-danger">无关联</span></td></tr>
+                    </table>
+                </div>
+                <div class="comparison-card">
+                    <h4>Style聚类</h4>
+                    <table>
+                        <tr><th>指标</th><th>数值</th></tr>
+                        <tr><td>聚类数</td><td>4</td></tr>
+                        <tr><td>Chi²</td><td>37.71</td></tr>
+                        <tr><td>p值</td><td>0.2626</td></tr>
+                        <tr><td>结论</td><td><span class="badge badge-danger">无关联</span></td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Elements -->
+        <section id="elements" class="section">
+            <h2>🔥 四元素分析 (火土风水)</h2>
+
+            <h3>分析动机</h3>
+            <p>将12星座合并为4元素，增加每组样本量，提高统计power。</p>
+
+            <div class="stats-grid">
+                <div class="stat-card" style="border-color:#ef4444;background:linear-gradient(135deg,#fef2f2,#fee2e2)">
+                    <div class="number" style="color:#dc2626">Fire 火象</div>
+                    <div class="label">Aries, Leo, Sagittarius<br>4,506人 (25.2%)</div>
+                </div>
+                <div class="stat-card" style="border-color:#84cc16;background:linear-gradient(135deg,#f7fee7,#ecfccb)">
+                    <div class="number" style="color:#65a30d">Earth 土象</div>
+                    <div class="label">Taurus, Virgo, Capricorn<br>4,927人 (27.6%)</div>
+                </div>
+                <div class="stat-card" style="border-color:#06b6d4;background:linear-gradient(135deg,#ecfeff,#cffafe)">
+                    <div class="number" style="color:#0891b2">Air 风象</div>
+                    <div class="label">Gemini, Libra, Aquarius<br>3,835人 (21.5%)</div>
+                </div>
+                <div class="stat-card" style="border-color:#3b82f6;background:linear-gradient(135deg,#eff6ff,#dbeafe)">
+                    <div class="number" style="color:#2563eb">Water 水象</div>
+                    <div class="label">Cancer, Scorpio, Pisces<br>4,604人 (25.8%)</div>
+                </div>
+            </div>
+
+            <h3>四元素分析结果</h3>
+            <table>
+                <tr>
+                    <th>分析类型</th>
+                    <th>p&lt;0.05显著</th>
+                    <th>Bonferroni显著</th>
+                    <th>聚类检验p值</th>
+                    <th>结论</th>
+                </tr>
+                <tr>
+                    <td>Style × 四元素</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>0.4365</td>
+                    <td><span class="badge badge-danger">无关联</span></td>
+                </tr>
+                <tr>
+                    <td>Empath × 四元素</td>
+                    <td>10</td>
+                    <td>0</td>
+                    <td>0.5046</td>
+                    <td><span class="badge badge-danger">无关联</span></td>
+                </tr>
+            </table>
+
+            <h3>有趣发现 (未通过Bonferroni)</h3>
+            <p><span class="badge badge-info">Empath语义分析</span> 以下发现来自Empath分析（"写什么"），非Style分析（"怎么写"）</p>
+
+            <div class="alert alert-info" style="margin-bottom:15px">
+                <span class="alert-icon">💧</span>
+                <div>
+                    <strong>Water水象 (Cancer, Scorpio, Pisces) 在负面情绪维度得分较高</strong><br>
+                    disappointment (p=0.0051), anger (p=0.0212), disgust (p=0.0213)<br>
+                    但效应量极小，未通过校正，不能作为可靠结论。
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <span class="alert-icon">🔥</span>
+                <div>
+                    <strong>Fire火象 (Aries, Leo, Sagittarius) 在科技维度得分较高</strong><br>
+                    computer (p=0.0297)<br>
+                    同样效应量极小，未通过校正，不能作为可靠结论。
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>维度</th>
+                    <th>p值</th>
+                    <th>最高元素</th>
+                    <th>最低元素</th>
+                </tr>
+                <tr><td>disappointment</td><td>0.0051</td><td>Water</td><td>Air</td></tr>
+                <tr><td>anger</td><td>0.0212</td><td>Water</td><td>Air</td></tr>
+                <tr><td>disgust</td><td>0.0213</td><td>Water</td><td>Air</td></tr>
+                <tr><td>restaurant</td><td>0.0268</td><td>Water</td><td>Air</td></tr>
+                <tr><td>dance</td><td>0.0280</td><td>Water</td><td>Fire</td></tr>
+                <tr><td>sports</td><td>0.0285</td><td>Water</td><td>Fire</td></tr>
+                <tr><td>beach</td><td>0.0289</td><td>Water</td><td>Air</td></tr>
+                <tr><td>computer</td><td>0.0297</td><td>Fire</td><td>Water</td></tr>
+                <tr><td>occupation</td><td>0.0391</td><td>Earth</td><td>Air</td></tr>
+                <tr><td>clothing</td><td>0.0401</td><td>Water</td><td>Air</td></tr>
+            </table>
+        </section>
+
+        <!-- Section 7: Discussion -->
+        <section id="discussion" class="section">
+            <h2>🤔 方法论讨论</h2>
+
+            <h3>为什么找不到信号？</h3>
+
+            <div class="discussion-grid">
+                <div class="discussion-card">
+                    <h4>1. Bonferroni校正太严格？</h4>
+                    <p><strong>部分是</strong>：Bonferroni是最保守的校正方法。</p>
+                    <table>
+                        <tr><th>测试数</th><th>阈值</th></tr>
+                        <tr><td>194</td><td>0.00026</td></tr>
+                        <tr><td>37</td><td>0.00135</td></tr>
+                    </table>
+                    <p>替代方案FDR会更宽松，但...</p>
+                    <p><strong>关键问题是效应量</strong>：最大η²=0.0009，仅解释0.09%方差，即使"显著"也无实际意义。</p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>2. 50,000字符太少？</h4>
+                    <p><strong>否</strong>：远超标准要求。</p>
+                    <table>
+                        <tr><th>研究目的</th><th>推荐</th></tr>
+                        <tr><td>基本风格</td><td>500词</td></tr>
+                        <tr><td>稳定分析</td><td>2,500词</td></tr>
+                        <tr><td>深度分析</td><td>10,000词</td></tr>
+                    </table>
+                    <p>我们：<strong>8,000-10,000词</strong></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>3. 样本量不够？</h4>
+                    <p><strong>否</strong>：17,872人远超一般研究。</p>
+                    <p>统计power足以检测到微小效应。如果星座有影响，应该能检测到。</p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>4. 最可能的解释</h4>
+                    <p><strong>星座根本不影响写作风格</strong></p>
+                    <p>效应量接近零，与噪音无异。</p>
+                </div>
+            </div>
+
+            <h3>与心理学研究对比</h3>
+
+            <div class="alert alert-info">
+                <span class="alert-icon">📚</span>
+                <div>
+                    <strong>参照标准</strong>：2022年心理学meta分析 (n=85,724)<br>
+                    Big Five人格特质与LIWC语言特征的关联，52个类别解释<strong>5.1%</strong>的人格方差。
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>研究</th>
+                    <th>样本量</th>
+                    <th>效应量</th>
+                    <th>解释方差</th>
+                </tr>
+                <tr>
+                    <td>人格→语言 (meta-analysis)</td>
+                    <td>85,724</td>
+                    <td>r = 0.08-0.14</td>
+                    <td>5.1%</td>
+                </tr>
+                <tr style="background:#fee2e2">
+                    <td><strong>星座→语言 (本研究)</strong></td>
+                    <td>17,872</td>
+                    <td>η² = 0.0009</td>
+                    <td><strong>0.09%</strong></td>
+                </tr>
+            </table>
+
+            <div class="conclusion-box">
+                <h3>星座效应比人格小 50倍以上</h3>
+                <p>人格特质是公认的稳定个体差异，其对语言的影响也只有5%。星座的效应比人格小50倍，基本等于零。</p>
+            </div>
+        </section>
+
+        <!-- Section 8: Conclusion -->
+        <section id="conclusion" class="section">
+            <h2>✅ 最终结论</h2>
+
+            <h3>完整分析汇总</h3>
+            <div class="table-responsive">
+            <table>
+                <tr>
+                    <th>分析类型</th>
+                    <th>特征数</th>
+                    <th>p&lt;0.05</th>
+                    <th>Bonferroni</th>
+                    <th>最大η²</th>
+                    <th>聚类p值</th>
+                </tr>
+                <tr>
+                    <td>Empath × 12星座</td>
+                    <td>194</td>
+                    <td>13</td>
+                    <td><span class="badge badge-danger">0</span></td>
+                    <td>0.0009</td>
+                    <td>0.6067</td>
+                </tr>
+                <tr>
+                    <td>Style × 12星座</td>
+                    <td>37</td>
+                    <td>3</td>
+                    <td><span class="badge badge-danger">0</span></td>
+                    <td>0.0008</td>
+                    <td>0.2626</td>
+                </tr>
+                <tr>
+                    <td>Empath × 4元素</td>
+                    <td>194</td>
+                    <td>10</td>
+                    <td><span class="badge badge-danger">0</span></td>
+                    <td>&lt;0.001</td>
+                    <td>0.5046</td>
+                </tr>
+                <tr>
+                    <td>Style × 4元素</td>
+                    <td>37</td>
+                    <td>2</td>
+                    <td><span class="badge badge-danger">0</span></td>
+                    <td>&lt;0.001</td>
+                    <td>0.4365</td>
+                </tr>
+            </table>
+            </div>
+
+            <div class="conclusion-box">
+                <h3>核心结论</h3>
+                <p>在17,872位作者的大规模分析中，无论是<strong>语义内容(Empath 194维)</strong>还是<strong>写作风格(Style 37维)</strong>，无论是<strong>12星座</strong>还是<strong>4元素</strong>分组，经过Bonferroni多重比较校正后，<strong>没有任何特征显示星座间存在统计学显著差异</strong>。</p>
+            </div>
+
+            <h3>研究价值</h3>
+            <p>这是一个有价值的<strong>"零结果"</strong>发现：</p>
+            <ul>
+                <li><strong>样本量充足</strong>：17,872人，远超一般研究标准</li>
+                <li><strong>分析全面</strong>：231个特征（Empath 194 + Style 37）</li>
+                <li><strong>多角度验证</strong>：12星座、4元素、聚类分析</li>
+                <li><strong>方法严谨</strong>：Bonferroni校正控制假阳性</li>
+                <li><strong>结论稳健</strong>：从500人到17,872人，结论一致</li>
+                <li><strong>否定流行观念</strong>：太阳星座不影响语言表达风格</li>
+            </ul>
+
+            <h3>局限性</h3>
+            <ul>
+                <li><strong>时代偏差</strong>：Gutenberg以19世纪作家为主</li>
+                <li><strong>语言偏差</strong>：以英语作品为主</li>
+                <li><strong>单一作品</strong>：每位作者只取一部作品</li>
+                <li><strong>文学体裁</strong>：公共领域文学作品，可能不代表日常写作</li>
+                <li><strong>仅分析太阳星座</strong>：完整的占星学系统包含月亮、水星、金星、火星、木星、土星等行星位置，以及相位（aspects）、互容接纳（mutual reception）等复杂因素，本研究仅分析太阳星座一个变量</li>
+            </ul>
+
+            <h3>关于"太阳星座12分类"的反思</h3>
+            <div class="alert alert-success">
+                <span class="alert-icon">🎯</span>
+                <div>
+                    <strong>重要结论</strong><br>
+                    本研究的零结果恰恰验证了流行占星学的核心局限性：<strong>仅凭太阳星座将人类简单划分为12种类型是不成立的</strong>。
+                    <br><br>
+                    即使占星学体系内部有其复杂性（日月水金火木土、相位、宫位等），大众文化中广泛使用的"你是什么星座"的12分类法，在17,872人的大样本中未能展现出任何可检测的语言表达差异。这为质疑基于太阳星座的人格分类提供了实证依据。
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: Future -->
+        <section id="future" class="section">
+            <h2>🔮 后续方向讨论</h2>
+
+            <h3>可能的深化方向</h3>
+
+            <div class="discussion-grid">
+                <div class="discussion-card">
+                    <h4>1. 更精细的分组</h4>
+                    <p>按出生年代、国籍、文学流派等进行分层分析，检验是否存在交互效应。</p>
+                    <p><span class="badge badge-warning">预期收益: 低</span></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>2. 现代作家样本</h4>
+                    <p>分析当代作家（如Goodreads、Amazon作者），排除时代偏差。</p>
+                    <p><span class="badge badge-info">可行性: 中</span></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>3. 社交媒体文本</h4>
+                    <p>分析Twitter/Reddit等平台的普通用户文本，样本量可达百万级。</p>
+                    <p><span class="badge badge-info">可行性: 中</span></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>4. 跨语言比较</h4>
+                    <p>对比英语、中文、日语等不同语言的作家，检验文化差异。</p>
+                    <p><span class="badge badge-warning">预期收益: 低</span></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>5. 其他占星因素</h4>
+                    <p>分析月亮星座、上升星座、行星相位等，但数据获取困难。</p>
+                    <p><span class="badge badge-danger">可行性: 低</span></p>
+                </div>
+
+                <div class="discussion-card">
+                    <h4>6. 接受零结果</h4>
+                    <p>将当前研究作为"零结果"论文发表，证明流行观念是错误的。</p>
+                    <p><span class="badge badge-success">推荐</span></p>
+                </div>
+            </div>
+
+            <div class="alert alert-success">
+                <span class="alert-icon">💡</span>
+                <div>
+                    <strong>建议</strong><br>
+                    基于当前全面分析结果，星座效应比人格小50倍，继续研究的预期收益极低。建议将当前结果整理成"零结果"论文，科学价值在于：用大样本、多维度、严格统计证明了一个流行观念（星座影响表达风格）是错误的。
+                </div>
+            </div>
+        </section>
+
+        <!-- File Structure -->
+        <section class="section">
+            <h2>📁 文件结构</h2>
+
+            <pre>
+experiment_19770/
+├── README.md                    # 实验总览
+├── research_report.html         # 本报告
+├── code/                        # Python代码
+│   ├── 01_download_texts.py           # 下载Gutenberg文本
+│   ├── 01b_retry_failed.py            # 重试失败下载
+│   ├── 01c_retry_notfound.py          # 改进搜索重试
+│   ├── 02_merge_texts.py              # 合并数据
+│   ├── 02_empath_analysis.py          # Empath语义分析
+│   ├── 03_statistical_analysis.py     # 统计检验
+│   └── 04_clustering.py               # K-means聚类
+├── data/                        # 数据文件
+│   ├── gutenberg_texts_17872.json     # 最终数据
+│   └── gutenberg_texts_new_13683.json # 新下载数据
+├── results/                     # Empath分析结果
+│   ├── empath_analysis_17872.csv
+│   ├── statistical_results.csv
+│   ├── significant_results.csv
+│   └── cluster_summary.csv
+├── plots/                       # Empath可视化
+│   ├── significant_dimensions_plot.png
+│   ├── effect_size_plot.png
+│   └── pca_scatter.png
+└── style_analysis/              # Style分析
+    ├── README.md
+    ├── 01_style_analysis.py           # 37维Style特征
+    ├── 02_style_clustering.py         # Style聚类
+    ├── 03_element_analysis.py         # 四元素分析
+    ├── results/
+    │   ├── style_features_17872.csv
+    │   ├── style_statistical_results.csv
+    │   └── style_significant_results.csv
+    └── plots/
+        ├── style_elbow.png
+        └── style_pca.png
+            </pre>
+        </section>
+
+        <footer class="footer">
+            <p>太阳星座与写作风格关联性研究 | 样本量: 17,872 | 特征维度: 231</p>
+            <p>生成日期: 2026-06-28</p>
+        </footer>
+    </div>
+</body>
+</html>
